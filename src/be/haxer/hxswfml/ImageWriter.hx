@@ -77,6 +77,9 @@ class ImageWriter
 	{
 		return TBitsJPEG(id, JDJPEG2(bytes));
 	}
+	public function getTagWithMask(maskbytes:Bytes, ?id:Int=1):SWFTag {
+		return TBitsJPEG(id, JDJPEG3(bytes, maskbytes));
+	}
 	public function getSWF(?id:Int=1):Bytes
 	{
 		var placeObject2 = new PlaceObject();

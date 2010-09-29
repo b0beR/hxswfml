@@ -118,6 +118,7 @@ class SwfWriter
 		validElements.set('setbackgroundcolor', ['color']);
 		validElements.set('scriptlimits', ['maxRecursionDepth', 'scriptTimeoutSeconds']);
 		validElements.set('definebitsjpeg', ['id', 'file']);
+		validElements.set('definebitsjpeg3', ['id', 'file', 'maskfile']);
 		validElements.set('defineshape', ['id', 'bitmapId', 'x', 'y', 'scaleX', 'scaleY', 'rotate0', 'rotate1', 'repeat', 'smooth']);
 		validElements.set('beginfill',  ['color', 'alpha']);
 		validElements.set('begingradientfill', ['colors', 'alphas', 'ratios', 'type', 'x', 'y', 'scaleX', 'scaleY', 'rotate0', 'rotate1']);
@@ -222,6 +223,20 @@ class SwfWriter
 		bitmapIds[id] = [imageWriter.width, imageWriter.height];
 		return imageWriter.getTag(id);
 	}
+  
+  private function definebitsjpeg3():SWFTag
+  {
+    var id = getInt('id', null, true, true);
+    var file = getString('file', "", true);
+    var maskfile = getString('maskfile', "", true);
+    var bytes = getBytes(file);
+    var maskbytes = getBytes(maskfile);
+    var imageWriter = new ImageWriter();
+    imageWriter.write(bytes, file, currentTag);
+    bitmapIds[id] = [imageWriter.width, imageWriter.height];
+    return imageWriter.getTagWithMask(maskbytes, id);
+  }
+	
 	private function defineshape():SWFTag
 	{
 		var id = getInt('id', null, true, true);
