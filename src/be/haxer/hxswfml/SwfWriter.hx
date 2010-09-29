@@ -245,7 +245,7 @@ class SwfWriter
 		if(currentTag.exists('bitmapId'))
 		{
 			var bitmapId = getInt('bitmapId', null);
-			if(strict && dictionary[bitmapId] != 'definebitsjpeg')
+			if(strict && (dictionary[bitmapId] != 'definebitsjpeg' && dictionary[bitmapId] != 'definebitsjpeg3'))
 				error('ERROR: bitmapId ' + bitmapId + ' must be a reference to a DefineBitsJPEG tag. TAG: ' + currentTag.toString());
 			var width = bitmapIds[bitmapId][0] * 20;
 			var height = bitmapIds[bitmapId][1] * 20;
