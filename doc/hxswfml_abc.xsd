@@ -1,0 +1,834 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns="http://hxswfml.googlecode.com" 
+  xmlns:hx="http://hxswfml.googlecode.com" 
+  targetNamespace="http://hxswfml.googlecode.com" 
+  elementFormDefault="qualified">
+	
+  <xs:element name="abcfiles">
+    <xs:complexType>
+      <xs:sequence maxOccurs="unbounded">
+        <xs:element ref="abcfile"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:element name="abcfile">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:choice maxOccurs="unbounded">
+          <xs:element ref="class"/>
+          <xs:element ref="init"/>
+          <xs:element maxOccurs="unbounded" ref="function"/>
+        </xs:choice>
+      </xs:sequence>
+      <xs:attribute name="name" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="class">
+    <xs:complexType> 
+      <xs:sequence>
+        <xs:element ref="var" minOccurs="0" maxOccurs="unbounded" />
+        <xs:element ref="function" minOccurs="0" maxOccurs="unbounded" />
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="extends" type="xs:string" use="optional" />
+      <xs:attribute name="final" type="xs:boolean" use="optional" />
+      <xs:attribute name="sealed" type="xs:boolean" use="optional" />
+      <xs:attribute name="interface" type="xs:boolean" use="optional" />
+      <xs:attribute name="implements" type="xs:string" use="optional" />
+      <xs:attribute name="ns" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="var">
+    <xs:complexType>
+      <xs:attribute name="name" type="xs:string" use="required" />
+      <xs:attribute name="type" type="xs:string" use="optional" />
+      <xs:attribute name="value" type="xs:string" use="optional" />
+      <xs:attribute name="const" type="xs:boolean" use="optional"/>
+      <xs:attribute name="static" type="xs:boolean" use="optional"/>
+      <xs:attribute name="slot" type="xs:integer" use="optional"/>
+      <xs:attribute name="ns" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="function">
+    <xs:complexType>
+      <xs:group ref="opcodes" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:attribute name="name" use="required"/>
+      <xs:attribute name="args" type="xs:string"/>
+      <xs:attribute name="return" type="xs:string"/>
+      <xs:attribute name="static" type="xs:boolean"/>
+      <xs:attribute name="override" type="xs:boolean"/>
+      <xs:attribute name="defaultParameters" type="xs:string"/>
+      <xs:attribute name="f" type="xs:string" />
+      <xs:attribute name="final" type="xs:boolean" />
+      <xs:attribute name="initScope" type="xs:integer"/>
+      <xs:attribute name="kind" type="xs:string"/>
+      <xs:attribute name="locals" type="xs:string"/>
+      <xs:attribute name="maxScope" type="xs:integer"/>
+      <xs:attribute name="maxStack" type="xs:integer"/>
+      <xs:attribute name="nRegs" type="xs:integer"/>
+      <xs:attribute name="newBlock" type="xs:boolean"/>
+      <xs:attribute name="unused" type="xs:boolean"/>
+      <xs:attribute name="variableArgs" type="xs:boolean"/>
+      <xs:attribute name="argumentsDefined" type="xs:boolean"/>
+      <xs:attribute name="usesDXNS" type="xs:boolean"/>
+      <xs:attribute name="debugName" type="xs:string"/>
+      <xs:attribute name="native" type="xs:boolean"/>
+      <xs:attribute name="slot" type="xs:integer" use="optional"/>
+      <xs:attribute name="ns" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+  
+  <xs:element name="init">
+    <xs:complexType>
+      <xs:group ref="opcodes" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:attribute name="name" type="xs:string" use="required"/>
+      <xs:attribute name="return" type="xs:string" use="optional"/>
+      <xs:attribute name="initScope" type="xs:integer" use="optional"/>
+      <xs:attribute name="maxScope" type="xs:integer" use="optional"/>
+      <xs:attribute name="maxStack" type="xs:integer" use="optional"/>
+      <xs:attribute name="nRegs" type="xs:integer" use="optional"/>
+      <xs:attribute name="ns" type="xs:string" use="optional"/>
+    </xs:complexType>
+  </xs:element>
+
+  <xs:group name="opcodes">
+    <xs:sequence>
+      <xs:choice maxOccurs="unbounded">
+        <xs:element ref="OCallPropLex"/>
+        <xs:element ref="OInstanceOf"/>
+        <xs:element ref="OAsString"/>
+        <xs:element ref="ORegKill"/>
+        <xs:element ref="OCallSuperVoid"/>
+        <xs:element ref="OCallSuper"/>
+        <xs:element ref="OSwap"/>
+        <xs:element ref="OArray"/>
+        <xs:element ref="OClassDef"/>
+        <xs:element ref="ODebugFile"/>
+        <xs:element ref="ODebugLine"/>
+        <xs:element ref="ODup"/>
+        <xs:element ref="OFunction"/>
+        <xs:element ref="OGetGlobalScope"/>
+        <xs:element ref="OGetLex"/>
+        <xs:element ref="OGetProp"/>
+        <xs:element ref="OInitProp"/>
+        <xs:element ref="OReg"/>
+        <xs:element ref="ORetVoid"/>
+        <xs:element ref="OScope"/>
+        <xs:element ref="OSetProp"/>
+        <xs:element ref="OSetReg"/>
+        <xs:element ref="OThis"/>
+        <xs:element ref="JAlways"/>
+        <xs:element ref="JEq"/>
+        <xs:element ref="JGte"/>
+        <xs:element ref="JFalse"/>
+        <xs:element ref="JGt"/>
+        <xs:element ref="OpLte"/>
+        <xs:element ref="JLt"/>
+        <xs:element ref="JLte"/>
+        <xs:element ref="JNeq"/>
+        <xs:element ref="JNotLte"/>
+        <xs:element ref="JNotGt"/>
+        <xs:element ref="JNotGte"/>
+        <xs:element ref="JNotLt"/>
+        <xs:element ref="JTrue"/>
+        <xs:element ref="OAsAny"/>
+        <xs:element ref="OAsType"/>
+        <xs:element ref="OCallPropVoid"/>
+        <xs:element ref="OCallProperty"/>
+        <xs:element ref="OCallStack"/>
+        <xs:element ref="OCast"/>
+        <xs:element ref="OConstruct"/>
+        <xs:element ref="OConstructProperty"/>
+        <xs:element ref="OConstructSuper"/>
+        <xs:element ref="OFalse"/>
+        <xs:element ref="OFindProp"/>
+        <xs:element ref="OFindPropStrict"/>
+        <xs:element ref="OForIn"/>
+        <xs:element ref="OGetScope"/>
+        <xs:element ref="OIncrIReg"/>
+        <xs:element ref="OIntRef"/>
+        <xs:element ref="OJump"/>
+        <xs:element ref="JPhysNeq"/>
+        <xs:element ref="OLabel"/>
+        <xs:element ref="ONewBlock"/>
+        <xs:element ref="ONext"/>
+        <xs:element ref="ONull"/>
+        <xs:element ref="OObject"/>
+        <xs:element ref="OForEach"/>
+        <xs:element ref="OPop"/>
+        <xs:element ref="ORet"/>
+        <xs:element ref="OSetSlot"/>
+        <xs:element ref="OSmallInt"/>
+        <xs:element ref="OString"/>
+        <xs:element ref="OToBool"/>
+        <xs:element ref="OToInt"/>
+        <xs:element ref="OToNumber"/>
+        <xs:element ref="OTrue"/>
+        <xs:element ref="OTypeof"/>
+        <xs:element ref="OpAdd"/>
+        <xs:element ref="OpAs"/>
+        <xs:element ref="OpEq"/>
+        <xs:element ref="OpGt"/>
+        <xs:element ref="OpIIncr"/>
+        <xs:element ref="OpIs"/>
+        <xs:element ref="OpLt"/>
+        <xs:element ref="OpMul"/>
+        <xs:element ref="OpNot"/>
+        <xs:element ref="OPopScope"/>
+        <xs:element ref="ODebugReg"/>
+        <xs:element ref="OpIDecr"/>
+        <xs:element ref="ODeleteProp"/>
+        <xs:element ref="OpISub"/>
+        <xs:element ref="OpIAdd"/>
+        <xs:element ref="OpINeg"/>
+        <xs:element ref="OThrow"/>
+        <xs:element ref="OpShr"/>
+        <xs:element ref="OToUInt"/>
+        <xs:element ref="OpAnd"/>
+        <xs:element ref="OSwitch"/>
+        <xs:element ref="OSwitch2"/>
+        <xs:element ref="OInt"/>
+        <xs:element ref="OpShl"/>
+        <xs:element ref="OFloat"/>
+        <xs:element ref="OpDiv"/>
+        <xs:element ref="OpUShr"/>
+        <xs:element ref="OpSub"/>
+        <xs:element ref="ONaN"/>
+        <xs:element ref="OpOr"/>
+        <xs:element ref="ODecrIReg"/>
+        <xs:element ref="OpIMul"/>
+        <xs:element ref="OpMod"/>
+        <xs:element ref="OpXor"/>
+        <xs:element ref="OpNeg"/>
+        <xs:element ref="OpBitNot"/>
+        <xs:element ref="OpGte"/>
+        <xs:element ref="OGetSlot"/>
+        <xs:element ref="OCase"/>
+        <xs:element ref="OApplyType"/>
+        <xs:element ref="OpIncr"/>
+        <xs:element ref="OpDecr"/>
+        <xs:element ref="OpPhysEq"/>
+        <xs:element ref="OpIn"/>
+        <xs:element ref="OpMemGet8"/>
+        <xs:element ref="OpMemGet16"/>
+        <xs:element ref="OpMemGet32"/>
+        <xs:element ref="OpMemGetFloat"/>
+        <xs:element ref="OpMemGetDouble"/>
+        <xs:element ref="OpMemSet8"/>
+        <xs:element ref="OpMemSet16"/>
+        <xs:element ref="OpMemSet32"/>
+        <xs:element ref="OpMemSetFloat"/>
+        <xs:element ref="OpMemSetDouble"/>
+        <xs:element ref="OpSign1"/>
+        <xs:element ref="OpSign8"/>
+        <xs:element ref="OpSign16"/>
+        <xs:element ref="OCheckIsXml"/>
+        <xs:element ref="OCatch"/>
+        <xs:element ref="OGetSuper"/>
+        <xs:element ref="OSetSuper"/>
+        <xs:element ref="OUndefined"/>
+        <xs:element ref="OPushWith"/>
+        <xs:element ref="JPhysEq"/>
+        <xs:element ref="OToString"/>
+        <xs:element ref="OGetDescendants"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
+  
+  <!-- OPCODES-->
+  <xs:element name="ODeleteProp">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OGetDescendants">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OCase">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OApplyType">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OpIncr">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OToString">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OSwap">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OInstanceOf">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OUndefined">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OPushWith">
+    <xs:complexType/>
+  </xs:element>
+   <xs:element name="OForEach">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OAsString">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OCheckIsXml">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpDecr">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpPhysEq">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpIn">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemGet8">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemGet16">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemGet32">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemGetFloat">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemGetDouble">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemSet8">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemSet16">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemSet32">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemSetFloat">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMemSetDouble">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpSign1">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpSign8">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpSign16">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OInt">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OClassDef">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ODebugReg">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+      <xs:attribute name="r" use="required" type="xs:integer"/>
+      <xs:attribute name="line" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ODebugFile">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ODebugLine">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OFloat">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ODecrIReg">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OpUShr">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpSub">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMod">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpXor">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpNeg">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpBitNot">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="ONaN">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpGte">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpOr">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpIMul">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OPopScope">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpDiv">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpAnd">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpISub">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpINeg">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpShl">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OThrow">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpShr">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OToUInt">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OThis">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpIAdd">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OScope">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OGetLex">
+    <xs:complexType>
+      <xs:attribute name="v" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OSwitch">
+    <xs:complexType>
+      <xs:attribute name="default" use="required" type="xs:integer"/>
+      <xs:attribute name="deltas" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OSwitch2">
+    <xs:complexType>
+      <xs:attribute name="default" use="required" type="xs:string"/>
+      <xs:attribute name="deltas" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ODup">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OSetReg">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OInitProp">
+    <xs:complexType>
+      <xs:attribute name="v" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OGetGlobalScope">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OGetProp">
+    <xs:complexType>
+      <xs:attribute name="v" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OFunction">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OReg">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OArray">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OSetProp">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ORetVoid">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="JAlways">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JPhysEq">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OCatch">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+      <xs:attribute name="start" use="required" type="xs:integer"/>
+      <xs:attribute name="end" use="required" type="xs:integer"/>
+      <xs:attribute name="handle" use="required" type="xs:integer"/>
+      <xs:attribute name="type" use="required" type="xs:string"/>
+      <xs:attribute name="variable" use="optional" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JEq">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JFalse">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JGt">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JPhysNeq">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JNotGte">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OpLte">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JNotLt">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JNotLte">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JGte">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JLt">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JLte">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JNeq">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JNotGt">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="JTrue">
+    <xs:complexType>
+      <xs:attribute name="label" use="optional" type="xs:string"/>
+      <xs:attribute name="jump" use="optional" type="xs:string"/>
+      <xs:attribute name="offset" use="optional" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OAsAny">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpIDecr">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OAsType">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ORegKill">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OCallSuperVoid">
+    <xs:complexType>
+      <xs:attribute name="nargs" use="required" type="xs:integer"/>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OCallSuper">
+    <xs:complexType>
+      <xs:attribute name="nargs" use="required" type="xs:integer"/>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OCallPropVoid">
+    <xs:complexType>
+      <xs:attribute name="nargs" use="required" type="xs:integer"/>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OCallPropLex">
+    <xs:complexType>
+      <xs:attribute name="nargs" use="required" type="xs:integer"/>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OCallProperty">
+    <xs:complexType>
+      <xs:attribute name="nargs" use="required" type="xs:integer"/>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OCallStack">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OCast">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OConstruct">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OConstructProperty">
+    <xs:complexType>
+      <xs:attribute name="nargs" use="required" type="xs:integer"/>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OConstructSuper">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OSetSuper">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OGetSuper">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OFalse">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OFindProp">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OFindPropStrict">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OForIn">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OGetScope">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OIncrIReg">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OIntRef">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OJump">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OLabel">
+    <xs:complexType>
+      <xs:attribute name="name" use="required" type="xs:string"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ONewBlock">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="ONext">
+    <xs:complexType>
+      <xs:attribute name="v1" use="required" type="xs:integer"/>
+      <xs:attribute name="v2" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ONull">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OObject">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OPop">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="ORet">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OSetSlot">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OGetSlot">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OSmallInt">
+    <xs:complexType>
+      <xs:attribute name="v" use="required" type="xs:integer"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OString">
+    <xs:complexType>
+      <xs:attribute name="v" use="required"/>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="OToBool">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OToInt">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OToNumber">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OTrue">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OTypeof">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpAdd">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpAs">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpEq">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpGt">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpIIncr">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpIs">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpLt">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpMul">
+    <xs:complexType/>
+  </xs:element>
+  <xs:element name="OpNot">
+    <xs:complexType/>
+  </xs:element>
+</xs:schema>

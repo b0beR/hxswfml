@@ -1,0 +1,142 @@
+1)SWF general:
+http://www.adobe.com/devnet/swf/pdf/swf_file_format_spec_v10.pdf (see pages 26 to 33)
+
+-If the swf contains a <DefineABC /> tag (ActionscriptByteCode?,AS3) a <FileAttributes/> tag is mandatory.
+
+-If the swf contains a <MetaData /> tag you must set the 'hasMetaData' attribute to true in the <FileAttributes/> tag.
+
+-If you set the attribute 'hasMetaData' to true in the <FileAttributes/> tag then the swf must contain a <MetaData /> tag.
+
+-A swf contains at least one <ShowFrame/> tag.
+A basic swf (a movie with 3 empty frames) looks like:
+
+<swf>
+        <ShowFrame />
+        <ShowFrame />
+        <ShowFrame />
+</swf>
+Update: A new attribute count is added so that the above can be written as:
+<swf>
+        <ShowFrame count="3"/>
+</swf>
+
+The FlashPlayer will start parsing/playing the tags from the top till it reaches the <EndFrame/> tag.
+When it encounters a <ShowFrame/> it renders the previous tags to the screen.
+Note that although the <EndFrame/> tag is available for use, under normal circumstances you will never need it as it is added to the end of your file automatically by hXswfML.
+
+2)hXswfML syntax:
+-Element names are not case sensitive. <fileattributes/> is equally valid to <FileAttributes>
+-The attribute names are case sensitive.
+-Most tags have some default values set:
+Using <swf/> will be compiled as <swf width="800" height="600" fps="30" version="10" compressed="true" frameCount="1" />
+If you only want to change the framerate you would use: <swf fps="12"/>
+-Some tags have mandatory attributes which must be set. The program will throw an error and tell you what attribute is missing in which tag.
+
+The names of some elements in the hxswfml may seem confusing at some points (DefineSprite defines a MovieClip for example), but they are kept the same as much as possible as in the official swf file specifications, making a lookup for information more easy.
+More information about the swf file format and the possible tags can be found here:
+
+    http://www.adobe.com/devnet/swf/pdf/swf_file_format_spec_v10.pdf
+    http://www.m2osw.com/en/swf_alexref.html
+    http://www.the-labs.com/MacromediaFlash/SWF-Spec/SWFfilereference.html#h2SWFFileTags
+    http://www.half-serious.com/swf/format/index.html
+    http://www.delphiflash.com/xml-tags-specification.htm#ShowFrame
+
+-Definition tags vs control/displaytags
+To define a character use a definition tag.
+Example:
+
+<DefineShape id="1">
+		<BeginFill color="0x000000" alpha="1.0" />
+    <DrawRect width="100" height="100"/> 
+</DefineShape>
+
+creates a black 100x100 rectangle.
+The id of this tag must be unique in the swf.
+
+To show this rectangle you must place it on the display list with a control/display tag.
+Example:
+
+<PlaceObject id="1" depth="1" />
+
+-id refers to the definition tag that has set id to 1.
+-the depth must be unique in the swf
+
+To render to screen you conclude with a <ShowFrame/> tag.
+Everything that has been put on or removed from the display up until the next <ShowFrame/> will be rendered to screen.
+
+A movie with 1 frame, rendering a black rectangle on screen looks like:
+
+<swf>
+        <DefineShape id="1"> 
+					<BeginFill color="0x000000" alpha="1.0" />
+          <DrawRect width="100" height="100"/> 
+        </DefineShape>
+        <PlaceObject id="1" depth="1" />
+        <ShowFrame/>
+</swf>
+
+Multiframe movies:
+To show a black rectangle in frame 1 and a red rectangle in frame 2 you use:
+
+<swf frameCount="2">
+        <DefineShape id="1">
+					<BeginFill color="0x000000" alpha="1.0" />
+          <DrawRect width="100" height="100"/> 
+        </DefineShape>
+                
+        <DefineShape id="2"> 
+					<BeginFill color="0x000000" alpha="1.0" />
+          <DrawCircle width="200" height="200"/> 
+        </DefineShape>
+        
+        <PlaceObject id="1" depth="1" />
+        <ShowFrame/>
+        
+        <RemoveObject depth="1" />
+        <PlaceObject id="2" depth="1" />
+        <ShowFrame/>
+</swf>
+
+You can omit the <RemoveObject/> tag by using the move attribute in the PlaceObject? tag:
+
+        <RemoveObject depth="1" />
+        <PlaceObject id="2" depth="1" />
+equivalent/shortcut:
+        <PlaceObject id="2" depth="1" move="true" />
+
+A more complete explanation of the move attribute can be found in the swf file specs on page 35.
+Short summary:
+
+    The move and id attributes indicate whether a new character is being added to the display list, or a character already on the display list is being modified:
+
+        -move = false and id is present: A new character (id) is placed on the display list at the specified depth.
+        -move = true and id is absent: The character at the specified depth is modified. Because any given depth can have only one character, no id is required.
+        -move = true and id is present: The character at the specified Depth is removed, and a new character (id) is placed at that depth.
+
+MovieClips?:
+A movieclip can be considered as a 'mini swf'. A limited set of the swf tags can be used inside a movieclip:
+Available tags are: <PlaceObject/>, <RemoveObject/>, <StartSound/>, <FrameLabel/>, <ShowFrame />, <EndFrame />
+Example of a 2 frame movieclip showing a black rectangle in frame 1 and a red rectangle in frame 2:
+
+<swf>
+        <DefineShape id="1">
+					<BeginFill color="0x000000" alpha="1.0" />
+          <DrawRoundRect width="100" height="100" r="25"/> 
+        </DefineShape>
+                
+        <DefineShape id="2"> 
+					<BeginFill color="0x000000" alpha="1.0" />
+          <DrawEllipse width="200" height="150"/> 
+        </DefineShape>
+
+        <DefineSprite id="3" frameCount="2">
+                <PlaceObject id="1" depth="1" />
+                <ShowFrame/>
+                <PlaceObject id="2" depth="1" move="true" />
+                <ShowFrame/>
+        </DefineSprite>
+        
+        <PlaceObject id="3" depth="1" />
+        
+        <ShowFrame/>
+</swf>

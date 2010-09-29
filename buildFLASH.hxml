@@ -1,0 +1,31 @@
+#swc(SWF)
+-cp src
+be.haxer.hxswfml.SwfWriter
+be.haxer.hxswfml.HxmWriter
+be.haxer.hxswfml.AbcReader
+-swf9 bin/flash/swf/hxswfml.swc
+-D swc
+-debug
+-cmd echo "swc(SWF) created"
+
+#swf
+--next
+-cp src
+be.haxer.hxswfml.SwfWriter
+be.haxer.hxswfml.HxmWriter
+be.haxer.hxswfml.AbcReader
+-swf9 bin/flash/swf/hxswfml.swf
+-debug
+-cmd echo "swf created"
+
+#swc(AIR)
+--next
+-cp src
+be.haxer.hxswfml.HxmWriter
+be.haxer.hxswfml.AbcReader
+be.haxer.hxswfml.SwfWriter
+-swf9 bin/flash/air/hxswfml_AIR.swc
+-lib air
+-D air
+-debug
+-cmd echo "swc(AIR) created"

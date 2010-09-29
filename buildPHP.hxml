@@ -1,0 +1,7 @@
+#neko
+-cp src
+be.haxer.hxswfml.Main
+-main be.haxer.hxswfml.Main
+-php bin/php
+-cmd echo "php created"
+-cmd pause

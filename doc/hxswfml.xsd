@@ -1,0 +1,742 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema
+	xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns="http://hxswfml.googlecode.com" 
+	xmlns:hx="http://hxswfml.googlecode.com" 
+	targetNamespace="http://hxswfml.googlecode.com" 
+	elementFormDefault="qualified">
+	<xs:include schemaLocation="hxswfml_abc.xsd"/>
+	<xs:element name="swf">
+		<xs:annotation>
+			<xs:appinfo>
+				<sch:ns xmlns:sch="http://purl.oclc.org/dsdl/schematron" uri="http://hxswfml.googlecode.com" prefix="hx"/>
+				<sch:pattern name="test" xmlns:sch="http://purl.oclc.org/dsdl/schematron">
+					<sch:rule context="hx:swf/hx:SymbolClass[@id>0]">
+						<sch:assert test="
+							count(//hx:swf/hx:DefineSprite[@id = current()/@id]) +
+							count(//hx:swf/hx:DefineSound[@id = current()/@id]) +
+							count(//hx:swf/hx:DefineButton[@id = current()/@id]) +
+							count(//hx:swf/hx:DefineBitsJPEG[@id = current()/@id]) +
+							count(//hx:swf/hx:DefineBinaryData[@id = current()/@id]) +
+							count(//hx:swf/hx:DefineFont[@id = current()/@id]) = 1">
+							The id attribute in a SymbolClass element must reference an existing id in a DefineSound,DefineSprite,DefineButton,DefineBitsJPEG,DefineBinaryData or DefineFont element.
+						</sch:assert>
+					</sch:rule>
+					<sch:rule context="hx:swf/hx:DefineABC">
+						<sch:assert test="count(//hx:swf/hx:FileAttributes)=1" >
+						The FileAttributes tag is required when a DefineABC tag is used.
+						</sch:assert>
+					</sch:rule>	
+					<sch:rule context="hx:swf/hx:ExportAssets[@id>0]">
+						<sch:assert test="
+							count(//hx:swf/hx:DefineSprite[@id = current()/@id]) +
+							count(//hx:swf/hx:DefineSound[@id = current()/@id]) +
+							count(//hx:swf/hx:DefineButton[@id = current()/@id]) +
+							count(//hx:swf/hx:DefineBitsJPEG[@id = current()/@id]) +
+							count(//hx:swf/hx:DefineFont[@id = current()/@id]) = 1">
+							The id attribute in an ExportAssets element must reference an existing id in a DefineSound,DefineSprite,DefineButton,DefineBitsJPEG, or DefineFont element.
+						</sch:assert>
+					</sch:rule>
+					<sch:rule context="hx:swf/hx:RemoveObject[@depth]">
+						<sch:assert test="count(//hx:swf/hx:PlaceObject[@depth=current()/@depth])>0">The depth attribute in a RemoveObject element must reference at least one PlaceObject element (within the same scope) that has put an object on that depth.</sch:assert>
+					</sch:rule>
+					<sch:rule context="hx:swf/hx:DefineSprite/hx:RemoveObject[@depth]">
+						<sch:assert test="count(//hx:swf/hx:DefineSprite/hx:PlaceObject[@depth=current()/@depth])>0">The depth attribute in a RemoveObject element must reference at least one PlaceObject element (within the same scope) that has put an object on that depth.</sch:assert>
+					</sch:rule>
+				</sch:pattern>
+			</xs:appinfo>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:sequence minOccurs="0" maxOccurs="1">
+				<xs:element ref="FileAttributes"/>
+				</xs:sequence>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element ref="SetBackgroundColor"/>
+						<xs:element ref="ScriptLimits"/>
+						<xs:element ref="MetaData"/>
+						<xs:element ref="DefineBitsJPEG"/>
+						<xs:element ref="DefineBinaryData"/>
+						<xs:element ref="DefineSound"/>
+						<xs:element ref="DefineFont"/>
+						<xs:element ref="DefineEditText"/>
+						<xs:element ref="DefineShape"/>
+						<xs:element ref="DefineSprite"/>
+						<xs:element ref="DefineButton"/>
+						<xs:element ref="DefineScalingGrid"/>
+						<xs:element ref="DefineABC"/>
+						<xs:element ref="PlaceObject"/>
+						<xs:element ref="RemoveObject"/>
+						<xs:element ref="StartSound"/>
+						<xs:element ref="SymbolClass"/>
+						<xs:element ref="ExportAssets"/>
+						<xs:element ref="FrameLabel"/>
+						<xs:element ref="Tween" />
+						<xs:element ref="Custom" />
+					</xs:choice>
+					<xs:element ref="ShowFrame" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="compressed" type="xs:boolean" use="optional" default="true"/>
+			<xs:attribute name="fps" use="optional" default="30">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="120"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="frameCount" type="xs:integer" use="optional" default="1"/>
+			<xs:attribute name="height" use="optional" default="600">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="2880"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="version" type="xs:integer" use="optional" default="10"/>
+			<xs:attribute name="width" use="optional" default="800">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="1"/>
+						<xs:maxInclusive value="2880"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+
+		<xs:unique name="DefinitionID">
+			<xs:selector xpath="hx:DefineSound|hx:DefineEditText|hx:DefineShape|hx:DefineSprite|hx:DefineButton|hx:DefineBitsJPEG|hx:DefineBinaryData|hx:DefineFont"/>
+			<xs:field xpath="@id"/>
+		</xs:unique>
+		<xs:unique name="DefineSoundID">
+			<xs:selector xpath="hx:DefineSound"/>
+			<xs:field xpath="@id"/>
+		</xs:unique>
+		<xs:keyref name="StartSoundTarget" refer="DefineSoundID">
+			<xs:selector xpath="hx:StartSound"/>
+			<xs:field xpath="@id"/>
+		</xs:keyref>
+		<xs:unique name="DisplayObjectID">
+			<xs:selector xpath="hx:DefineEditText|hx:DefineShape|hx:DefineSprite|hx:DefineButton"/>
+			<xs:field xpath="@id"/>
+		</xs:unique>
+		<xs:keyref name="PlaceObjectTarget" refer="DisplayObjectID">
+			<xs:selector xpath="hx:PlaceObject|hx:DefineSprite/hx:PlaceObject|hx:DefineButton/hx:ButtonState"/>
+			<xs:field xpath="@id"/>
+		</xs:keyref>
+		<xs:unique name="DefineBitsJPEGID">
+			<xs:selector xpath="hx:DefineBitsJPEG"/>
+			<xs:field xpath="@id"/>
+		</xs:unique>
+		<xs:keyref name="DefineShapeTarget" refer="DefineBitsJPEGID">
+			<xs:selector xpath="hx:DefineShape|hx:DefineShape/hx:BeginBitmapFill"/>
+			<xs:field xpath="@bitmapId"/>
+		</xs:keyref>
+		<xs:unique name="DefineFontID">
+			<xs:selector xpath="hx:DefineFont"/>
+			<xs:field xpath="@id"/>
+		</xs:unique>
+		<xs:keyref name="DefineEditTextFontTarget" refer="DefineFontID">
+			<xs:selector xpath="hx:DefineEditText"/>
+			<xs:field xpath="@fontID"/>
+		</xs:keyref>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="FileAttributes">
+		<xs:annotation>
+			<xs:documentation>This element can occur only once and must be the first element. If the swf contains a DefineABC element then the actionscript3 attribute must be set to true so that the Flash Player will set the VM to AMV2. If the swf contains a DefineMeta element then the hasMetaData attribute must be set to true and vice versa: if the hasMetaData attribute has been set to true then the swf must contain a DefineMetadata element. To allow local playback of swf with access to network locations the useNetwork attribute must be set to true. Access to local files is not available in that case. If the swf needs to reference local files, then the useNetwork attribute must be set to false. </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="actionscript3" type="xs:boolean" use="optional" default="true"/>
+			<xs:attribute name="hasMetaData" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="useDirectBlit" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="useGPU" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="useNetwork" type="xs:boolean" use="optional" default="false"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="SetBackgroundColor">
+		<xs:annotation>
+			<xs:documentation>This element typically occurs at the beginning of your swf and occurs only once. For validation through this schema the color attribute must be in hexadecimal notation. The hXswfML compiler accepts both hexadecimal notation as decimal/base10 </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="color" use="optional" default="0xFFFFFF">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="(0x[0-9A-Fa-f]{6})"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="ScriptLimits">
+		<xs:annotation>
+			<xs:documentation>This element typically occurs at the beginning of your swf and occurs only once.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="maxRecursionDepth" type="xs:integer" use="optional" default="256"/>
+			<xs:attribute name="scriptTimeoutSeconds" use="optional" default="15">
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="65535"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="MetaData">
+		<xs:annotation>
+			<xs:documentation>This element typically occurs at the beginning of your swf and may occur only once. If this element is present in the swf then the hasMetaData attribute of the FileAttributes element must be set to true. This element must be present if the hasMetadata attribute in the FileAttributes element has been set to true.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="file" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="DefineBitsJPEG">
+		<xs:annotation>
+			<xs:documentation>This element will store the raw(compressed) image bytes. You can not display these bytes directly but you must use a DefineShape element where the bitmapId refers to this element (width and height will be read from the jpeg file). Supported file formats are jpg, png, gif. With a SymbolClass element you can link a class that extends flash.display.Bitmap to this element..</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="file" type="xs:string" use="required"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="DefineBinaryData">
+		<xs:annotation>
+			<xs:documentation>This element will store the raw bytes of the loaded file. Any file format issupportedd. With a SymbolClass element you can link a class that extends flash.utils.ByteArray to this element.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="file" type="xs:string" use="required"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="DefineSound">
+		<xs:annotation>
+			<xs:documentation>This element will store the raw bytes of the loaded sound file. Supported file formats are mp3. With a SymbolClass element you can link a class that extends flash.media.Sound to this element. You can also start this sound with the StartSound element.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="file" type="xs:string" use="required"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="DefineFont">
+		<xs:annotation>
+			<xs:documentation>This element will store the outlines of the loaded font. At the moment there is no native ttf parser implemented in hXswfML so you need external software (like font2.swf) which converts a ttf file to an swf file. Supported file formats are swf(containing DefineFont tags). With a SymbolClass element you can link a class that extends flash.text.Font to this element. You can also refer to this font in a DefineEditText element.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="file" type="xs:string" use="required"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="charCodes" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="DefineEditText">
+		<xs:annotation>
+			<xs:documentation>This element will create a dynamic text field. The optional fontId must refer to a DefineFont element. Use a PlaceObject element to put this textfield on the display list. </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="align" use="optional" default="0">
+				<!-- 0=left, 1=right, 2=center, 3=justify -->
+				<xs:simpleType>
+					<xs:restriction base="xs:integer">
+						<xs:minInclusive value="0"/>
+						<xs:maxInclusive value="3"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="autoSize" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="border" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="file" type="xs:string" use="optional" default=""/>
+			<xs:attribute name="fontClass" type="xs:string" use="optional" default=""/>
+			<xs:attribute name="fontHeight" type="xs:integer" use="optional" default="12"/>
+			<xs:attribute name="fontID" type="xs:positiveInteger" use="optional"/>
+			<xs:attribute name="height" type="xs:integer" use="optional" default="100"/>
+			<xs:attribute name="html" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="indent" type="xs:integer" use="optional" default="0"/>
+			<xs:attribute name="initialText" type="xs:string" use="optional" default=""/>
+			<xs:attribute name="input" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="leading" type="xs:integer" use="optional" default="0"/>
+			<xs:attribute name="leftMargin" type="xs:integer" use="optional" default="0"/>
+			<xs:attribute name="maxLength" type="xs:integer" use="optional" default="0"/>
+			<xs:attribute name="multiline" type="xs:boolean" use="optional" default="true"/>
+			<xs:attribute name="password" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="rightMargin" type="xs:integer" use="optional" default="0"/>
+			<xs:attribute name="selectable" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="alpha" type="xs:decimal" use="optional" default="1.0"/>
+			<xs:attribute name="textColor" use="optional" default="0x000000">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="(0x[0-9A-Fa-f]{6})"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="useOutlines" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="variableName" type="xs:string" use="optional" default=""/>
+			<xs:attribute name="wasStatic" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="width" type="xs:integer" use="optional" default="100"/>
+			<xs:attribute name="wordWrap" type="xs:boolean" use="optional" default="true"/>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="DefineShape">
+		<xs:annotation>
+			<xs:documentation>This element will create a Shape object with a solid fill or a bitmap fill. The bitmapId for the bitmap fill must be a reference to the id in previously created DefineBitsJPEG element. 
+	The usage is as follows:
+	1) if you provide a bitmapId no other attributes are required.
+	2) if you do not provide a bitmapId then then you must use the drawing api in the child elements. Use a PlaceObject element to put  the shape on the display list.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence maxOccurs="unbounded">
+				<xs:choice minOccurs="0" maxOccurs="unbounded">
+					<xs:element ref="LineStyle"/>
+					<xs:element ref="BeginFill"/>
+					<xs:element ref="BeginGradientFill"/>
+					<xs:element ref="BeginBitmapFill"/>
+					<xs:element ref="MoveTo"/>
+					<xs:element ref="LineTo"/>
+					<xs:element ref="CurveTo"/>
+					<xs:element ref="DrawCircle"/>
+					<xs:element ref="DrawEllipse"/>
+					<xs:element ref="DrawRect"/>
+					<xs:element ref="DrawRoundRect"/>
+					<xs:element ref="DrawRoundRectComplex"/>
+					<xs:element ref="EndLine"/>
+					<xs:element ref="EndFill"/>
+				</xs:choice>
+			</xs:sequence>
+			<xs:attribute name="bitmapId" type="xs:positiveInteger" use="optional"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="repeat" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="rotate0" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="rotate1" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="scaleX" type="xs:decimal" use="optional" default="1.0"/>
+			<xs:attribute name="scaleY" type="xs:decimal" use="optional" default="1.0"/>
+			<xs:attribute name="smooth" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="x" type="xs:integer" use="optional" default="0"/>
+			<xs:attribute name="y" type="xs:integer" use="optional" default="0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="LineStyle">
+		<xs:annotation>
+			<xs:documentation> Sets up a lineStyle and starts line.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="width" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="alpha" type="xs:decimal" use="optional" default="1.0"/>
+			<xs:attribute name="color" use="optional" default="0x000000">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="(0x[0-9A-Fa-f]{6})"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="BeginFill">
+		<xs:annotation>
+			<xs:documentation> Sets up a solid fill and starts fill.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="alpha" type="xs:decimal" use="optional" default="1.0"/>
+			<xs:attribute name="color" use="optional" default="0x000000">
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:pattern value="(0x[0-9A-Fa-f]{6})"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="BeginBitmapFill">
+		<xs:annotation>
+			<xs:documentation> Sets up a bitmap fill and starts fill.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="bitmapId" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="x" type="xs:decimal" use="required" />
+			<xs:attribute name="y" type="xs:decimal" use="required" />
+			<xs:attribute name="scaleX" type="xs:decimal" use="required" />
+			<xs:attribute name="scaleY" type="xs:decimal" use="required" />
+			<xs:attribute name="rotate0" type="xs:decimal" use="required" />
+			<xs:attribute name="rotate1" type="xs:decimal" use="required" />
+			<xs:attribute name="repeat" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="smooth" type="xs:boolean" use="optional" default="false"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="BeginGradientFill">
+		<xs:annotation>
+			<xs:documentation> Sets up a gradient fill and starts fill.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="type" use="required" >
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="linear"/>
+						<xs:enumeration value="radial"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="colors" type="xs:string" use="required" />
+			<xs:attribute name="alphas" type="xs:string" use="required" />
+			<xs:attribute name="ratios" type="xs:string" use="required" />
+			<xs:attribute name="x" type="xs:decimal" use="required" />
+			<xs:attribute name="y" type="xs:decimal" use="required" />
+			<xs:attribute name="scaleX" type="xs:decimal" use="required" />
+			<xs:attribute name="scaleY" type="xs:decimal" use="required" />
+			<xs:attribute name="rotate0" type="xs:decimal" use="required" />
+			<xs:attribute name="rotate1" type="xs:decimal" use="required" />
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="MoveTo">
+		<xs:annotation>
+			<xs:documentation> Moves the drawing position.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="x" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="y" type="xs:decimal" use="optional" default="0.0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="LineTo">
+		<xs:annotation>
+			<xs:documentation> Draws a line from the last drawing position to the given position.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="x" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="y" type="xs:decimal" use="optional" default="0.0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="CurveTo">
+		<xs:annotation>
+			<xs:documentation> Draws a curved line from the last drawing position to the given position. ax=anchor point x, ay=anchor pointy, cx=control point x, cy= control point y</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="cx" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="cy" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="ax" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="ay" type="xs:decimal" use="optional" default="0.0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="DrawCircle">
+		<xs:annotation>
+			<xs:documentation> Draws a circle with middle point set to the given position. The value of the sections attribute is the number of segments the circle is made of. Attribute r holds the radius value.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="x" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="y" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="r" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="sections" type="xs:integer" use="optional" default="16"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="DrawEllipse">
+		<xs:annotation>
+			<xs:documentation> Draws an ellipse</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="x" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="y" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="width" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="height" type="xs:decimal" use="optional" default="0.0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="DrawRect">
+		<xs:annotation>
+			<xs:documentation> Draws an ellipse</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="x" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="y" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="width" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="height" type="xs:decimal" use="optional" default="0.0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="DrawRoundRect">
+		<xs:annotation>
+			<xs:documentation> Draws an rounded rectangle</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="x" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="y" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="width" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="height" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="r" type="xs:decimal" use="optional" default="0.0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="DrawRoundRectComplex">
+		<xs:annotation>
+			<xs:documentation> Draws a rounded rectangle with different corner radiuses.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="x" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="y" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="width" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="height" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="rtl" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="rtr" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="rbl" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="rbr" type="xs:decimal" use="optional" default="0.0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="EndFill">
+		<xs:annotation>
+			<xs:documentation> Ends the fill.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType/>
+	</xs:element>
+	<!--__________________________-->
+	<xs:element name="EndLine">
+		<xs:annotation>
+			<xs:documentation> Ends the line.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType/>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="DefineSprite">
+		<xs:annotation>
+			<xs:documentation>This element will (despite the name) create a movie clip with one or more frames. With the SymbolClass element you can link a class that extends flash.display.Movieclip or flash.display.Sprite to this element. If you link a class that extends Sprite to this element while it has multiple frames, only the first frame will be taken into consideration. The last child element must always be a ShowFrame element. Use PlaceObject to put the movie clip on the display list.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element ref="PlaceObject"/>
+						<xs:element ref="RemoveObject"/>
+						<xs:element ref="StartSound"/>
+						<xs:element ref="FrameLabel"/>
+						<xs:element ref="Tween" />
+						<xs:element ref="Custom" />
+					</xs:choice>
+					<xs:element ref="ShowFrame" maxOccurs="unbounded"/>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="frameCount" type="xs:positiveInteger" use="optional" default="1"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="file" type="xs:string" use="optional"/>
+		</xs:complexType>
+
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="DefineButton">
+		<xs:annotation>
+			<xs:documentation>This element will create a button with 4 states: up, over, down, hit. You must at least use 1 ButtonState element. With the SymbolClass element you can link a class which extends flash.display.SimpleButton to this element. Use a PlaceObject element to put the button on the display list.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element ref="ButtonState" maxOccurs="unbounded"/>
+			</xs:sequence>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="ButtonState">
+		<xs:annotation>
+			<xs:documentation>This element will create a button state(up, over, down, hit). You must at least use 1 ButtonState element. You can supply multiple ButtonState elements targeting the same state. The requirement for the id attribute is the same as for a PlaceObject element. Use a PlaceObject element to put the button on the display list.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="depth" type="xs:integer" use="required"/>
+			<xs:attribute name="down" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="hit" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="over" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="rotate0" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="rotate1" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="scaleX" type="xs:decimal" use="optional" default="1.0"/>
+			<xs:attribute name="scaleY" type="xs:decimal" use="optional" default="1.0"/>
+			<xs:attribute name="up" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="x" type="xs:integer" use="optional" default="0"/>
+			<xs:attribute name="y" type="xs:integer" use="optional" default="0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="DefineScalingGrid">
+		<xs:annotation>
+			<xs:documentation>This element will provide a scaling grid for a DefineSprite of DefineButton element.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="height" type="xs:integer" use="required"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="width" type="xs:integer" use="required"/>
+			<xs:attribute name="x" type="xs:integer" use="required"/>
+			<xs:attribute name="y" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--___________________________________________________________-->
+	<xs:element name="DefineABC">
+		<xs:annotation>
+			<xs:documentation>This element will hold a block of ActionscriptByteCode. This code must be compiled actionscript or haXe script by a compiler such as the Flash IDE, Flex compiler or the haXe compiler. Supported file formats are swf and abc. This element will be generated automatically if you provide a class for the base attribute in a SymbolClass element. If the file is an abc file you can supply a name for it. Do not include the tag header (tag or tag length).</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element ref="abcfiles"/>
+						<xs:element ref="abcfile"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="file" type="xs:string" use="optional"/>
+			<xs:attribute name="name" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="SymbolClass">
+		<xs:annotation>
+			<xs:documentation>This element will provide the means to link a class name to a previously created symbol such as a DefineSound(flash.media.Sound), DefineButton(flash.display.SimpleButton), DefineSprite(flash.display.Sprite, flash.display.MovieClip), DefineFont(flash.text.Font), DefineBinaryData(flash.utils.ByteArray), DefineBitsJPEG(flash.display.Bitmap). If you supply a value for the base attribute then hXswfML will automatically generate and compile a class and will add it in DefineABC element below your SymbolClass element. If you do not supply a value for the base attribute then your script (which you add through a DefineABC element) must have a class with the correct name and that extends the correct base class. In order for the FlashPlayer to know what class should be use as the main entry point(the class that will run when the swf is loaded) you must supply a SymbolClass element with id=0 and the name="MyDocumentClass" (this always name="flash.Boot" in the case of haXe).	</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="base" type="xs:string" use="optional"/>
+			<xs:attribute name="class" type="xs:string" use="required"/>
+			<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="ExportAssets">
+		<xs:annotation>
+			<xs:documentation>This element will provide the means to link a class name to a previously created symbol such as a DefineSound (Sound), DefineButton(Button), DefineSprite(MovieClip), DefineFont(Font).</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="class" type="xs:string" use="required"/>
+			<xs:attribute name="id" type="xs:nonNegativeInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="PlaceObject">
+		<xs:annotation>
+			<xs:documentation>This element will put a previously created symbol on the display list. The id attribute must refer to a DefineEditText,DefineShape,DefineSprite or DefineButton element. You must conclude with a ShowFrame tag to render everything previously put on the display list to the screen.The move and id attributes indicate whether a new character is being added to the display list, or a character already on the display list is being modified:
+    -move = false and id is present: A new character (id) is placed on the display list at the specified depth.
+    -move = true and id is absent: The character at the specified depth is modified. Because any given depth can have only one character, no id is required.
+    -move = true and id is present: The character at the specified depth is removed, and a new character (id) is placed at that depth. 	</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="depth" type="xs:integer" use="required"/>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="move" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="name" type="xs:string" use="optional" default=""/>
+			<xs:attribute name="rotate0" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="rotate1" type="xs:decimal" use="optional" default="0.0"/>
+			<xs:attribute name="scaleX" type="xs:decimal" use="optional" default="1.0"/>
+			<xs:attribute name="scaleY" type="xs:decimal" use="optional" default="1.0"/>
+			<xs:attribute name="x" type="xs:integer" use="optional" default="0"/>
+			<xs:attribute name="y" type="xs:integer" use="optional" default="0"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="RemoveObject">
+		<xs:annotation>
+			<xs:documentation>This element removes a symbol previously put on the display list at the given depth.	</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="depth" type="xs:integer" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="StartSound">
+		<xs:annotation>
+			<xs:documentation>This element starts playing a sound that was previously defined with a DefineSound element. To stop the playing sound, use StartSound with the stop attribute set to true.	</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+			<xs:attribute name="loopCount" type="xs:nonNegativeInteger" use="optional" default="0"/>
+			<xs:attribute name="stop" type="xs:boolean" use="optional" default="false"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="FrameLabel">
+		<xs:annotation>
+			<xs:documentation>This element gives a label to the current frame. When the anchor attribute is set to false, you can use this frame label in your script for actions as gotoAndPlay('someLabel');. If the anchor is set to true you can reference the frame in the url: movie.swf#someLabel.	</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="anchor" type="xs:boolean" use="optional" default="false"/>
+			<xs:attribute name="name" type="xs:string" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="ShowFrame">
+		<xs:annotation>
+			<xs:documentation>This element will render everything previously put on the display list with PlaceObject.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="count" type="xs:positiveInteger" use="optional" default="1"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="EndFrame">
+		<xs:annotation>
+			<xs:documentation>This element is the last element of the entire movie and signals the end to the Flash Player. This is also the last element in any DefineSprite elements.This element is added automatically by the hXswfML compiler, so under normal conditions you should never use or add this element yourself.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType/>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="Custom">
+		<xs:annotation>
+			<xs:documentation>This element allows you to create your own swf tags or use an swf tag that is currently not supported by hxswfml. If tagId is provided, the data should contain the bytes for the tag body and have to be in little Endian order. Don't include the tag header (tag id or tag length) in the data. If you omit the tagId it must be present along with the tag length in the data or file. If a path to a file is supplied that will be used. Otherwise you need to supply the bytes as a comma seperated list in the data attribute. </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="tagId" type="xs:positiveInteger" use="optional"/>
+			<xs:attribute name="file" type="xs:string" use="optional"/>
+			<xs:attribute name="data" type="xs:string" use="optional"/>
+			<xs:attribute name="comment" type="xs:string" use="optional"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="Tween">
+		<xs:annotation>
+			<xs:documentation>This element is a shortcut for many consecutieve placeObjects to create a tweening effect. This element must be preceeded by a PlaceObject element.</xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:sequence>
+				<xs:sequence maxOccurs="unbounded">
+					<xs:choice minOccurs="0" maxOccurs="unbounded">
+						<xs:element ref="Tw"/>
+					</xs:choice>
+				</xs:sequence>
+			</xs:sequence>
+			<xs:attribute name="depth" type="xs:positiveInteger" use="required" />
+			<xs:attribute name="frameCount" type="xs:positiveInteger" use="required"/>
+		</xs:complexType>
+	</xs:element>
+	<!--____________________________________________________________-->
+	<xs:element name="Tw">
+		<xs:annotation>
+			<xs:documentation>This element tells what property to tween and the start and end value. </xs:documentation>
+		</xs:annotation>
+		<xs:complexType>
+			<xs:attribute name="prop" use="required" >
+				<xs:simpleType>
+					<xs:restriction base="xs:string">
+						<xs:enumeration value="x"/>
+						<xs:enumeration value="y"/>
+						<xs:enumeration value="scaleX"/>
+						<xs:enumeration value="scaleY"/>
+						<xs:enumeration value="rotate0"/>
+						<xs:enumeration value="rotate1"/>
+					</xs:restriction>
+				</xs:simpleType>
+			</xs:attribute>
+			<xs:attribute name="start" type="xs:decimal" use="required"/>
+			<xs:attribute name="end" type="xs:decimal" use="required"/>
+		</xs:complexType>
+	</xs:element>
+</xs:schema>

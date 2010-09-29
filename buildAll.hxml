@@ -1,0 +1,79 @@
+#swf9/swf
+-cp src
+be.haxer.hxswfml.SwfWriter
+be.haxer.hxswfml.HxmWriter
+be.haxer.hxswfml.AbcReader
+-main be.haxer.hxswfml.SwfWriter
+-swf9 bin/flash/swf/hxswfml.swf
+#-debug
+-cmd echo "swf created"
+
+#swf9/swc
+--next
+-cp src
+be.haxer.hxswfml.HxmWriter
+be.haxer.hxswfml.AbcReader
+be.haxer.hxswfml.SwfWriter
+-swf9 bin/flash/swf/hxswfml.swc
+-D swc
+#-debug
+-xml doc/api.xml
+-cmd echo "swc(SWF) created"
+-cmd echo "swc documentation created"
+
+#swf9/swc(AIR)
+--next
+-cp src
+be.haxer.hxswfml.HxmWriter
+be.haxer.hxswfml.AbcReader
+be.haxer.hxswfml.SwfWriter
+-swf9 bin/flash/air/hxswfml_AIR.swc
+-lib air
+-D air
+-cmd echo "swc(AIR) created"
+
+#swf9(AS3)
+--next
+-cp src
+be.haxer.hxswfml.SwfWriter
+be.haxer.hxswfml.HxmWriter
+be.haxer.hxswfml.AbcReader
+-main be.haxer.hxswfml.SwfWriter
+-as3 bin/flash/as3
+#-debug
+-cmd echo "AS3 created"
+
+#neko
+--next
+-cp src
+be.haxer.hxswfml.Main
+-main be.haxer.hxswfml.Main
+-neko bin/neko/hxswfml.n
+-cmd nekotools boot bin/neko/hxswfml.n
+-cmd echo "neko created"
+
+#php
+--next
+-cp src
+be.haxer.hxswfml.Main
+-main be.haxer.hxswfml.Main
+-php bin/php
+-cmd echo "php created"
+
+#javasript
+--next
+-cp src
+be.haxer.hxswfml.SwfWriter
+-js bin/javascript/hxswfml.js
+-cmd echo "javascript created"
+
+#cpp
+--next
+-cp src
+-main be.haxer.hxswfml.Main
+-cpp bin/cpp
+-cmd cd bin/cpp
+-cmd copy Main.exe hxswfmlc.exe
+-cmd echo "cpp created"
+
+-cmd pause
